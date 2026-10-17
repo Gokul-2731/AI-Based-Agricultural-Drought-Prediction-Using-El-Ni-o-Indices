@@ -1,13 +1,13 @@
 :root {
   color-scheme: light;
-  --ink: #26342e;
+  --ink: #000201;
   --muted: #68746d;
   --green: #3e6850;
   --green-dark: #31543f;
   --green-pale: #eaf0e9;
-  --paper: #fbfbf8;
-  --white: #ffffff;
-  --line: #e1e5df;
+  --paper: #808000;
+  --white: #8f1b1b;
+  --line: #426033;
   --content-width: 1100px;
 }
 
