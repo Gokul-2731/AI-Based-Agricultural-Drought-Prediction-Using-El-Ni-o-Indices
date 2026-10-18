@@ -6,6 +6,9 @@
 #
 # Run:   python app.py
 # Test:  open http://127.0.0.1:5000/api/forecast?lat=9.92&lon=78.12   (Madurai)
+#
+# NEW in this version: every forecast is saved in the MySQL table "forecasts".
+# Needs: pip install mysql-connector-python   and a db_config.py file.
 
 import math
 from datetime import date, timedelta
@@ -14,7 +17,13 @@ import joblib
 import numpy as np
 import pandas as pd
 import requests
+import mysql.connector
 from flask import Flask, jsonify, request
+
+try:
+    import db_config                      # your MySQL settings
+except ImportError:
+    db_config = None                      # the app still works, it just won't save
 
 app = Flask(__name__)
 
@@ -107,6 +116,40 @@ def latest_oni(year, month):
     return float(oni_table.dropna().iloc[-1]["oni"])     # fall back to latest we have
 
 
+# ---------- Database helpers ----------
+def connect_db():
+    """Open a connection to MySQL. connection_timeout stops the app waiting forever."""
+    return mysql.connector.connect(
+        host=db_config.HOST, user=db_config.USER, password=db_config.PASSWORD,
+        database=db_config.DATABASE, connection_timeout=3)
+
+
+def save_forecast(district, based_on, months, predicted, normal, percent, risk, oni):
+    """Save one forecast row. Returns True if saved, False if anything went wrong.
+    A database problem must never stop the farmer from seeing the forecast."""
+    if db_config is None:
+        return False
+    try:
+        db = connect_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT district_id FROM districts WHERE name = %s", (district,))
+        found = cursor.fetchone()
+        if found is None:
+            db.close()
+            return False
+        cursor.execute(
+            "INSERT INTO forecasts (district_id, based_on_month, forecast_months, "
+            "predicted_rain_mm, normal_rain_mm, percent_of_normal, risk_label, oni_used) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+            (found[0], based_on, ",".join(months), predicted, normal, percent, risk, oni))
+        db.commit()
+        db.close()
+        return True
+    except Exception as error:
+        print("Could not save forecast:", error)
+        return False
+
+
 # ---------- The API ----------
 @app.after_request
 def allow_frontend(response):
@@ -149,17 +192,47 @@ def forecast():
     percent = round(100 * predicted / normal) if normal > 0 else None
 
     next_months = [MONTH_NAMES[(month + i) % 12] for i in range(3)]   # month+1..+3
+    risk = risk_label(percent) if percent is not None else "Not enough history"
+    based_on_text = f"{MONTH_NAMES[month - 1]} {year}"
+
+    # Save this forecast in MySQL (True or False is shown in the answer)
+    was_saved = save_forecast(district, based_on_text, next_months, round(predicted),
+                              round(normal), percent, risk, round(row["oni"], 2))
+
     return jsonify(
         district=district,
         forecast_months=next_months,
         predicted_rain_mm=round(predicted),
         normal_rain_mm=round(normal),
         percent_of_normal=percent,
-        risk=risk_label(percent) if percent is not None else "Not enough history",
-        based_on={"latest_complete_month": f"{MONTH_NAMES[month - 1]} {year}",
+        risk=risk,
+        saved_to_database=was_saved,
+        based_on={"latest_complete_month": based_on_text,
                   "el_nino_index": round(row["oni"], 2)},
         note="Forecast for the TOTAL rain of these 3 months. It is an estimate, not a guarantee.",
     )
+
+
+@app.route("/api/history")
+def history():
+    """Show the last 10 saved forecasts, so you can check that saving works."""
+    if db_config is None:
+        return jsonify(error="db_config.py not found"), 503
+    try:
+        db = connect_db()
+        cursor = db.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT f.forecast_id, d.name AS district, f.made_at, f.forecast_months, "
+            "f.predicted_rain_mm, f.normal_rain_mm, f.percent_of_normal, f.risk_label "
+            "FROM forecasts f JOIN districts d ON d.district_id = f.district_id "
+            "ORDER BY f.forecast_id DESC LIMIT 10")
+        rows = cursor.fetchall()
+        db.close()
+        for r in rows:
+            r["made_at"] = str(r["made_at"])
+        return jsonify(rows)
+    except Exception as error:
+        return jsonify(error="Could not read the database", details=str(error)), 503
 
 
 @app.route("/")
