@@ -7,6 +7,7 @@ const files = new Map([
   ["/index.html", ["index.html", "text/html"]],
   ["/styles.css", ["styles.css", "text/css"]],
   ["/script.js", ["script.js", "text/javascript"]],
+  ["/forecast.js", ["forecast.js", "text/javascript"]],
 ]);
 
 const server = http.createServer((request, response) => {
