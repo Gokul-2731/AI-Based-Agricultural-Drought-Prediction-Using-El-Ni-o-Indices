@@ -6,4 +6,4 @@
 HOST = "localhost"
 USER = "root"
 PASSWORD = "your_mysql_password_here"   # <- change this to your real MySQL password
-DATABASE = "fieldwatch"
+DATABASE = "fieldwatch" 

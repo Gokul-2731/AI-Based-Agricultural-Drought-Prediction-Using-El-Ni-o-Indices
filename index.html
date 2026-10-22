@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js" defer></script>
     <script src="forecast.js" defer></script>
+    <script src="profit.js" defer></script>
   </head>
 
   <body>
@@ -168,7 +169,8 @@
 
       <!-- ============================================================
            PART 4: FARMER TOOLS
-           Each card is one feature of the project. The buttons are
+           Each card is one feature of the project. The profit and
+           suggestion buttons work (profit.js). The other buttons are
            ready but do nothing yet. Later, JavaScript can find a button
            by its id (or data-feature) and give it an action.
            ============================================================ -->
@@ -202,10 +204,15 @@
             <input class="field" id="land-area" type="number" min="0" step="0.5" placeholder="For example 2" />
 
             <div class="button-row">
-              <!-- FEATURE BUTTONS: profit/loss and crop suggestion -->
+              <!-- FEATURE BUTTONS: profit/loss and crop suggestion (working, see profit.js) -->
               <button class="btn" id="profit-btn" type="button" data-feature="profit-loss" data-i18n="btn_profit">Check profit or loss</button>
               <button class="btn btn-outline" id="suggest-btn" type="button" data-feature="crop-suggestion" data-i18n="btn_suggest">Suggest better crops</button>
             </div>
+
+            <!-- Messages and results appear here (filled by profit.js) -->
+            <p class="fc-status" id="profit-status" role="status" aria-live="polite" hidden></p>
+            <div class="result-box" id="profit-result" hidden></div>
+            <div class="result-box" id="suggest-result" hidden></div>
           </article>
 
           <!-- Card 2: daily retail prices -->
@@ -325,24 +332,4 @@
         <p class="eyebrow">About this reference</p>
         <h2>Climate information for a more resilient agriculture.</h2>
         <p>
-          Fieldwatch is a simple project concept for exploring how climate
-          information and earth observation can contribute to agricultural
-          drought research.
-        </p>
-      </section>
-    </main>
-
-    <!-- ============================================================
-         PART 6: FOOTER
-         ============================================================ -->
-    <footer class="site-footer">
-      <div class="section-wrap footer-inner">
-        <a class="brand footer-brand" href="#home">
-          <span class="brand-mark" aria-hidden="true">F</span>
-          <span>Fieldwatch</span>
-        </a>
-        <p>A project concept for agricultural drought research.</p>
-      </div>
-    </footer>
-  </body>
-</html>
+          Fieldwatch is a simple project

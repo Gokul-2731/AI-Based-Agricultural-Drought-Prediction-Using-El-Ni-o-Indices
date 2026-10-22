@@ -7,8 +7,8 @@
 # Run:   python app.py
 # Test:  open http://127.0.0.1:5000/api/forecast?lat=9.92&lon=78.12   (Madurai)
 #
-# NEW in this version: every forecast is saved in the MySQL table "forecasts".
-# Needs: pip install mysql-connector-python   and a db_config.py file.
+# Every forecast is saved in the MySQL table "forecasts" (needs db_config.py).
+# NEW in this version: /api/profit and /api/suggest use profit.py (must be in the same folder).
 
 import math
 from datetime import date, timedelta
@@ -19,6 +19,8 @@ import pandas as pd
 import requests
 import mysql.connector
 from flask import Flask, jsonify, request
+
+import profit                             # our crop and profit calculations
 
 try:
     import db_config                      # your MySQL settings
@@ -157,23 +159,33 @@ def allow_frontend(response):
     return response
 
 
-@app.route("/api/forecast")
-def forecast():
-    try:
-        lat, lon = float(request.args["lat"]), float(request.args["lon"])
-    except (KeyError, ValueError):
-        return jsonify(error="Please give lat and lon, e.g. ?lat=9.92&lon=78.12"), 400
+class ForecastError(Exception):
+    """Used when we cannot make a forecast. Carries a message and an HTTP status."""
+    def __init__(self, message, status, details=None):
+        super().__init__(message)
+        self.message, self.status, self.details = message, status, details
 
+
+FORECAST_CACHE = {}     # remembers forecasts so the profit buttons answer instantly
+
+
+def build_forecast(lat, lon):
+    """Make (or reuse) the 3-month forecast for a GPS point. Returns a dictionary."""
     district = nearest_district(lat, lon)
     year, month = last_complete_month()
+
+    # Same district + same month = same forecast, so reuse it
+    cache_key = (district, year, month)
+    if cache_key in FORECAST_CACHE:
+        return FORECAST_CACHE[cache_key]
 
     try:
         recent = fetch_recent_months(DISTRICTS[district][0], DISTRICTS[district][1], year, month)
     except Exception as e:
-        return jsonify(error="Could not download recent weather data", details=str(e)), 502
+        raise ForecastError("Could not download recent weather data", 502, str(e))
     recent = recent.dropna()
     if len(recent) < 3:
-        return jsonify(error="Not enough recent weather data yet. Try again later."), 503
+        raise ForecastError("Not enough recent weather data yet. Try again later.", 503)
     recent = recent.tail(3).reset_index(drop=True)
 
     row = {
@@ -199,7 +211,7 @@ def forecast():
     was_saved = save_forecast(district, based_on_text, next_months, round(predicted),
                               round(normal), percent, risk, round(row["oni"], 2))
 
-    return jsonify(
+    result = dict(
         district=district,
         forecast_months=next_months,
         predicted_rain_mm=round(predicted),
@@ -210,6 +222,74 @@ def forecast():
         based_on={"latest_complete_month": based_on_text,
                   "el_nino_index": round(row["oni"], 2)},
         note="Forecast for the TOTAL rain of these 3 months. It is an estimate, not a guarantee.",
+    )
+    FORECAST_CACHE[cache_key] = result
+    return result
+
+
+def read_location():
+    """Read lat and lon from the web address. Raises ForecastError if missing."""
+    try:
+        return float(request.args["lat"]), float(request.args["lon"])
+    except (KeyError, ValueError):
+        raise ForecastError("Please give lat and lon, e.g. ?lat=9.92&lon=78.12", 400)
+
+
+def read_area():
+    """Read the land area (acres) from the web address."""
+    try:
+        area = float(request.args["area"])
+    except (KeyError, ValueError):
+        raise ForecastError("Please give the land area in acres, e.g. &area=2", 400)
+    if not 0 < area <= 1000:
+        raise ForecastError("Land area must be more than 0 and at most 1000 acres.", 400)
+    return area
+
+
+@app.errorhandler(ForecastError)
+def show_forecast_error(error):
+    body = {"error": error.message}
+    if error.details:
+        body["details"] = error.details
+    return jsonify(body), error.status
+
+
+@app.route("/api/forecast")
+def forecast():
+    lat, lon = read_location()
+    return jsonify(build_forecast(lat, lon))
+
+
+@app.route("/api/profit")
+def profit_estimate():
+    """Example: /api/profit?lat=9.92&lon=78.12&crop=rice&area=2"""
+    lat, lon = read_location()
+    area = read_area()
+    crop = request.args.get("crop", "")
+    if crop not in profit.CROPS:
+        raise ForecastError("Unknown crop. Choose one of: " + ", ".join(profit.CROPS), 400)
+
+    fc = build_forecast(lat, lon)
+    result = profit.estimate(crop, area, fc["percent_of_normal"])
+    return jsonify(
+        forecast=dict(district=fc["district"], forecast_months=fc["forecast_months"],
+                      percent_of_normal=fc["percent_of_normal"], risk=fc["risk"]),
+        result=result,
+        note="Estimate using SAMPLE crop costs, yields and prices. Not a guarantee.",
+    )
+
+
+@app.route("/api/suggest")
+def suggest_crops():
+    """Example: /api/suggest?lat=9.92&lon=78.12&area=2"""
+    lat, lon = read_location()
+    area = read_area()
+    fc = build_forecast(lat, lon)
+    return jsonify(
+        forecast=dict(district=fc["district"], forecast_months=fc["forecast_months"],
+                      percent_of_normal=fc["percent_of_normal"], risk=fc["risk"]),
+        suggestions=profit.suggest(area, fc["percent_of_normal"], how_many=3),
+        note="Estimate using SAMPLE crop costs, yields and prices. Not a guarantee.",
     )
 
 
