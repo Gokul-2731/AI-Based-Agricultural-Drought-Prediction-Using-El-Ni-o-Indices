@@ -1,0 +1,5 @@
+made_at,district,based_on_month,forecast_months,predicted_rain_mm,normal_rain_mm,percent_of_normal,risk_label,el_nino_index
+2026-10-24 13:00:53,Madurai,Sep 2026,"Oct,Nov,Dec",503,444,113,Normal rainfall expected,2.16
+2026-10-24 22:18:43,Chennai,Sep 2026,"Oct,Nov,Dec",946,691,137,Wetter than normal (flood or waterlogging care needed),2.16
+2026-10-25 14:41:39,Chennai,Sep 2026,"Oct,Nov,Dec",946,691,137,Wetter than normal (flood or waterlogging care needed),2.16
+2026-10-28 19:19:06,Chennai,Sep 2026,"Oct,Nov,Dec",946,691,137,Wetter than normal (flood or waterlogging care needed),2.16

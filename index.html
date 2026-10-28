@@ -3,68 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Rainfall and drought forecasts for farmers, using El Niño indices, satellite data and machine learning."
-    />
+    <meta name="description" content="Rainfall and drought forecasts for farmers, using El Niño indices, satellite data and machine learning." />
     <title>Fieldwatch — Agricultural Drought Awareness</title>
     <link rel="stylesheet" href="styles.css" />
-    <script src="script.js" defer></script>
-    <script src="forecast.js" defer></script>
-    <script src="profit.js" defer></script>
+    <script src="layout.js" defer></script>
   </head>
 
   <body>
-    <!-- ============================================================
-         PART 1: HEADER
-         Brand name, menu links, language chooser and mobile menu button.
-         ============================================================ -->
-    <header class="site-header">
-      <div class="header-inner">
-        <a class="brand" href="#home" aria-label="Fieldwatch home">
-          <span class="brand-mark" aria-hidden="true">F</span>
-          <span>Fieldwatch</span>
-        </a>
-
-        <nav class="site-navigation" id="site-navigation" aria-label="Main navigation">
-          <a href="#forecast" data-i18n="nav_forecast">Forecast</a>
-          <a href="#tools" data-i18n="nav_tools">Farmer tools</a>
-          <a href="#overview" data-i18n="nav_overview">Overview</a>
-          <a href="#about" data-i18n="nav_about">About</a>
-        </nav>
-
-        <div class="header-tools">
-          <!-- FEATURE BUTTON: language chooser (to be connected later) -->
-          <label for="language-select" class="visually-hidden-label">Language</label>
-          <select class="field language-select" id="language-select" data-feature="language">
-            <option value="en">English</option>
-            <option value="ta">தமிழ்</option>
-            <option value="hi">हिन्दी</option>
-          </select>
-
-          <button
-            class="menu-toggle"
-            type="button"
-            aria-expanded="false"
-            aria-controls="site-navigation"
-          >
-            <span class="menu-toggle-label">Menu</span>
-          </button>
-        </div>
-      </div>
-    </header>
+    <header class="site-header" id="site-header"></header>
 
     <main>
-      <!-- ============================================================
-           PART 2: HERO
-           The first thing a visitor sees: a heading, a short text and
-           the voice and text search bar.
-           ============================================================ -->
+      <!-- Part 1: hero. The big Start button begins the 6-step journey. -->
       <section class="hero section-wrap" id="home">
         <div class="hero-copy">
           <p class="eyebrow">Agriculture · Climate · Research</p>
-          <h1 data-i18n="hero_title">Know the season before you sow.</h1>
-          <p class="hero-description" data-i18n="hero_text">
+          <h1>Know the season before you sow.</h1>
+          <p class="hero-description">
             Rainfall and drought forecasts for the next 3 months, built from
             El Niño indices, satellite observations and machine learning.
           </p>
@@ -72,25 +26,18 @@
           <!-- FEATURE BUTTONS: voice search + text search (to be connected later) -->
           <div class="search-bar" role="search">
             <label for="search-input" class="visually-hidden-label">Search</label>
-            <input
-              class="field search-input"
-              id="search-input"
-              type="text"
-              placeholder="Ask: what should I grow this season?"
-            />
+            <input class="field search-input" id="search-input" type="text" placeholder="Ask: what should I grow this season?" />
             <button class="btn btn-icon" id="voice-btn" type="button" data-feature="voice-search" aria-label="Search by voice">
-              <!-- small microphone drawing (SVG) -->
               <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
                 <path fill="currentColor" d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V22h2v-3.08A7 7 0 0 0 19 12h-2Z"/>
               </svg>
             </button>
-            <button class="btn" id="search-btn" type="button" data-feature="text-search" data-i18n="btn_search">Search</button>
+            <button class="btn" id="search-btn" type="button" data-feature="text-search">Search</button>
           </div>
 
-          <a class="text-link" href="#forecast">
-            <span data-i18n="link_forecast">Get your forecast</span>
-            <span aria-hidden="true">→</span>
-          </a>
+          <p class="hero-actions">
+            <a class="btn btn-large" href="forecast.html">Start: check the forecast →</a>
+          </p>
         </div>
 
         <aside class="season-card" aria-label="Project focus">
@@ -104,232 +51,69 @@
             changing conditions.
           </p>
           <div class="card-rule"></div>
-          <div class="focus-row">
-            <span>Climate signal</span>
-            <strong>El Niño indices</strong>
-          </div>
-          <div class="focus-row">
-            <span>Observation</span>
-            <strong>Satellite data</strong>
-          </div>
+          <div class="focus-row"><span>Climate signal</span><strong>El Niño indices</strong></div>
+          <div class="focus-row"><span>Observation</span><strong>Satellite data</strong></div>
         </aside>
       </section>
 
-      <!-- ============================================================
-           PART 3: FORECAST (already working with forecast.js)
-           IMPORTANT: do not rename the ids that start with "fc-",
-           because forecast.js looks for them.
-           ============================================================ -->
-      <section class="forecast section-wrap" id="forecast">
-        <p class="eyebrow">Your forecast</p>
-        <h2 data-i18n="forecast_title">What do the next 3 months look like for your farm?</h2>
-        <p class="section-intro">
-          Share your location, or pick a district, to see the expected rainfall
-          and drought risk.
-        </p>
+      <!-- Part 2: the 6 steps. Start at step 1, or jump to any step. -->
+      <section class="features section-wrap" id="features">
+        <p class="eyebrow">Your journey</p>
+        <h2>Six steps from forecast to sale.</h2>
+        <p class="section-intro">Follow the steps in order, or jump straight to the one you need.</p>
 
-        <div class="panel">
-          <div class="fc-actions">
-            <!-- FEATURE BUTTON: GPS location (working) -->
-            <button class="btn" id="fc-gps" type="button" data-i18n="btn_gps">Use my location</button>
-            <span class="fc-or">or</span>
-            <label for="fc-district" class="visually-hidden-label">District</label>
-            <select class="field" id="fc-district">
-              <option>Chennai</option>
-              <option selected>Madurai</option>
-              <option>Thanjavur</option>
-              <option>Coimbatore</option>
-              <option>Ramanathapuram</option>
-            </select>
-            <button class="btn btn-outline" id="fc-district-go" type="button" data-i18n="btn_show_forecast">Show forecast</button>
-          </div>
-
-          <p class="fc-status" id="fc-status" role="status" aria-live="polite" hidden></p>
-
-          <div class="fc-result" id="fc-result" hidden>
-            <p class="fc-place" id="fc-place"></p>
-            <p class="fc-months" id="fc-months"></p>
-
-            <div class="fc-bar-row">
-              <div class="fc-bar-label"><span>Expected rain</span><strong id="fc-pred-value"></strong></div>
-              <div class="fc-bar-track"><div class="fc-bar fc-bar-pred" id="fc-pred-bar"></div></div>
-            </div>
-            <div class="fc-bar-row">
-              <div class="fc-bar-label"><span>Normal rain</span><strong id="fc-norm-value"></strong></div>
-              <div class="fc-bar-track"><div class="fc-bar fc-bar-norm" id="fc-norm-bar"></div></div>
-            </div>
-
-            <p class="fc-percent" id="fc-percent"></p>
-            <p class="fc-risk" id="fc-risk"></p>
-            <p class="fc-basis" id="fc-basis"></p>
-            <p class="fc-note" id="fc-note"></p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============================================================
-           PART 4: FARMER TOOLS
-           Each card is one feature of the project. The profit and
-           suggestion buttons work (profit.js). The other buttons are
-           ready but do nothing yet. Later, JavaScript can find a button
-           by its id (or data-feature) and give it an action.
-           ============================================================ -->
-      <section class="tools section-wrap" id="tools">
-        <p class="eyebrow">Farmer tools</p>
-        <h2 data-i18n="tools_title">From forecast to a decision.</h2>
-        <p class="section-intro">
-          Tell us what you plan to grow and we will help you plan the season.
-        </p>
-
-        <div class="tool-grid">
-          <!-- Card 1: crop input, profit or loss, crop suggestions -->
-          <article class="tool-card">
-            <span class="tool-number">01</span>
-            <h3>Your crop</h3>
-            <p>Choose a crop and your land size to see the chance of profit or loss.</p>
-
-            <label class="field-label" for="crop-select">Crop</label>
-            <select class="field" id="crop-select">
-              <option value="">Select a crop</option>
-              <option value="rice">Rice (paddy)</option>
-              <option value="groundnut">Groundnut</option>
-              <option value="millets">Millets (ragi, cholam, kambu)</option>
-              <option value="maize">Maize</option>
-              <option value="cotton">Cotton</option>
-              <option value="sugarcane">Sugarcane</option>
-              <option value="pulses">Pulses (black gram, green gram)</option>
-            </select>
-
-            <label class="field-label" for="land-area">Land area (acres)</label>
-            <input class="field" id="land-area" type="number" min="0" step="0.5" placeholder="For example 2" />
-
-            <div class="button-row">
-              <!-- FEATURE BUTTONS: profit/loss and crop suggestion (working, see profit.js) -->
-              <button class="btn" id="profit-btn" type="button" data-feature="profit-loss" data-i18n="btn_profit">Check profit or loss</button>
-              <button class="btn btn-outline" id="suggest-btn" type="button" data-feature="crop-suggestion" data-i18n="btn_suggest">Suggest better crops</button>
-            </div>
-
-            <!-- Messages and results appear here (filled by profit.js) -->
-            <p class="fc-status" id="profit-status" role="status" aria-live="polite" hidden></p>
-            <div class="result-box" id="profit-result" hidden></div>
-            <div class="result-box" id="suggest-result" hidden></div>
-          </article>
-
-          <!-- Card 2: daily retail prices -->
-          <article class="tool-card">
-            <span class="tool-number">02</span>
-            <h3>Today's crop prices</h3>
-            <p>See the day-to-day retail prices of crops, updated every day.</p>
-            <div class="button-row">
-              <!-- FEATURE BUTTON: daily prices -->
-              <button class="btn" id="prices-btn" type="button" data-feature="daily-prices" data-i18n="btn_prices">View today's prices</button>
-            </div>
-          </article>
-
-          <!-- Card 3: nearby buyers -->
-          <article class="tool-card">
-            <span class="tool-number">03</span>
+        <div class="feature-grid">
+          <a class="feature-card" href="forecast.html">
+            <span class="tool-number">STEP 1</span>
+            <h3>Forecast</h3>
+            <p>Check the rainfall and drought risk for the next 3 months.</p>
+            <span class="feature-open">Open →</span>
+          </a>
+          <a class="feature-card" href="crop.html">
+            <span class="tool-number">STEP 2</span>
+            <h3>Choose your crop</h3>
+            <p>Pick what you plan to sow, or see crops that suit the season.</p>
+            <span class="feature-open">Open →</span>
+          </a>
+          <a class="feature-card" href="profit.html">
+            <span class="tool-number">STEP 3</span>
+            <h3>Profit or loss</h3>
+            <p>See the chance of profit or loss for your crop.</p>
+            <span class="feature-open">Open →</span>
+          </a>
+          <a class="feature-card" href="prices.html">
+            <span class="tool-number">STEP 4</span>
+            <h3>Today's prices</h3>
+            <p>Day-to-day retail prices of crops.</p>
+            <span class="feature-open">Open →</span>
+          </a>
+          <a class="feature-card" href="buyers.html">
+            <span class="tool-number">STEP 5</span>
             <h3>Nearby buyers</h3>
-            <p>Find mills and bulk buyers near you, with their contact details and demand.</p>
-
-            <label class="field-label" for="stock-quantity">How much do you have? (quintals)</label>
-            <input class="field" id="stock-quantity" type="number" min="0" placeholder="For example 50" />
-
-            <div class="button-row">
-              <!-- FEATURE BUTTON: nearby buyers -->
-              <button class="btn" id="buyers-btn" type="button" data-feature="nearby-buyers" data-i18n="btn_buyers">Find nearby buyers</button>
-            </div>
-          </article>
-
-          <!-- Card 4: payments -->
-          <article class="tool-card">
-            <span class="tool-number">04</span>
+            <p>Find mills and bulk buyers, with contact details and demand.</p>
+            <span class="feature-open">Open →</span>
+          </a>
+          <a class="feature-card" href="payment.html">
+            <span class="tool-number">STEP 6</span>
             <h3>Secure payment</h3>
-            <p>Pay or receive payment for a crop deal safely inside the app.</p>
-            <div class="button-row">
-              <!-- FEATURE BUTTON: payment gateway -->
-              <button class="btn" id="pay-btn" type="button" data-feature="payment" data-i18n="btn_pay">Pay securely</button>
-            </div>
-          </article>
+            <p>Pay or receive payment for a crop deal safely.</p>
+            <span class="feature-open">Open →</span>
+          </a>
         </div>
       </section>
 
-      <!-- ============================================================
-           PART 5: ABOUT THE PROJECT (your original sections)
-           ============================================================ -->
-      <section class="overview section-wrap" id="overview">
-        <div class="section-heading">
-          <p class="eyebrow">The project</p>
-          <h2>Connecting climate patterns to conditions on the ground.</h2>
-          <p>
-            Drought develops over time and can affect crops, soil, and rural
-            livelihoods. This project explores a data-driven way to study those
-            risks.
-          </p>
-        </div>
-
-        <div class="topic-grid">
-          <article class="topic-card">
-            <span class="topic-number">01</span>
-            <h3>El Niño indices</h3>
-            <p>
-              Large-scale ocean and atmosphere patterns provide useful context
-              for understanding seasonal climate variability.
-            </p>
-          </article>
-          <article class="topic-card">
-            <span class="topic-number">02</span>
-            <h3>Satellite data</h3>
-            <p>
-              Earth observation data can help describe vegetation and
-              environmental conditions across agricultural regions.
-            </p>
-          </article>
-          <article class="topic-card">
-            <span class="topic-number">03</span>
-            <h3>Machine learning</h3>
-            <p>
-              Data patterns can be studied together to support research into
-              agricultural drought prediction.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="approach" id="approach">
-        <div class="section-wrap approach-inner">
-          <div>
-            <p class="eyebrow">A simple overview</p>
-            <h2>From environmental data to useful insight.</h2>
-          </div>
-          <ol class="steps">
-            <li>
-              <span class="step-number">1</span>
-              <div>
-                <h3>Gather observations</h3>
-                <p>Bring together climate indices and satellite-derived data.</p>
-              </div>
-            </li>
-            <li>
-              <span class="step-number">2</span>
-              <div>
-                <h3>Study relationships</h3>
-                <p>Explore how climate and land conditions change over time.</p>
-              </div>
-            </li>
-            <li>
-              <span class="step-number">3</span>
-              <div>
-                <h3>Support understanding</h3>
-                <p>Present research in a clear way for people and communities.</p>
-              </div>
-            </li>
-          </ol>
-        </div>
-      </section>
-
+      <!-- Part 3: about -->
       <section class="about section-wrap" id="about">
-        <p class="eyebrow">About this reference</p>
+        <p class="eyebrow">About this project</p>
         <h2>Climate information for a more resilient agriculture.</h2>
         <p>
-          Fieldwatch is a simple project
+          Fieldwatch brings together El Niño indices, satellite observations and
+          machine learning to help farmers understand the coming season and make
+          better decisions about what to grow and where to sell.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+  </body>
+</html>

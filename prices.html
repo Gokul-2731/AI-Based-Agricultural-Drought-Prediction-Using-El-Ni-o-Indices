@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crop Prices | Fieldwatch</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <main class="container">
+    <h1>Crop Market Prices</h1>
+    <p>Check the sample prices of different crops.</p>
+    <p><strong>Note:</strong> These are demonstration prices, not live market data.</p>
+
+    <input
+      type="text"
+      id="crop-search"
+      placeholder="Search for a crop..."
+    >
+
+    <table>
+      <thead>
+        <tr>
+          <th>Crop</th>
+          <th>Sample Price (per quintal)</th>
+        </tr>
+      </thead>
+      <tbody id="prices-list">
+        <!-- JavaScript adds crop prices here -->
+      </tbody>
+    </table>
+
+    <p id="price-status"></p>
+    <a href="buyers.html">Find Buyers →</a>
+    <br><br>
+    <a href="forecast.html">Back to Forecast</a>
+  </main>
+
+  <script src="layout.js"></script>
+  <script src="prices.js"></script>
+</body>
+</html>

@@ -541,7 +541,728 @@ h2 {
 
 
 /* ---------- 7. PROJECT SECTIONS (overview, steps, about) ---------- */
-.overview {
+.overview 
+{
   padding-top: 72px;
   padding-bottom: 80px;
-  border-top: 1px
+  border-top: 1px solid var(--line);
+}
+
+.section-heading {
+  max-width: 660px;
+  margin-bottom: 36px;
+}
+
+.section-heading h2,
+.approach h2,
+.about h2 {
+  margin-bottom: 12px;
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+}
+
+.section-heading > p:last-child,
+.about > p:last-child {
+  max-width: 620px;
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.topic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.topic-card {
+  min-height: 200px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+.topic-number {
+  color: var(--clay);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.topic-card h3 {
+  margin: 14px 0 8px;
+  font-size: 1.1rem;
+}
+
+.topic-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.approach {
+  padding: 70px 0;
+  background: var(--green-pale);
+}
+
+.approach-inner {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 70px;
+}
+
+.approach h2 {
+  max-width: 360px;
+  margin-bottom: 0;
+}
+
+.steps {
+  display: grid;
+  gap: 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  display: flex;
+  gap: 16px;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--green);
+  border-radius: 50%;
+  color: var(--green);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.steps h3 {
+  margin: 2px 0 3px;
+  font-size: 1rem;
+}
+
+.steps p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.about {
+  padding-top: 78px;
+  padding-bottom: 82px;
+}
+
+.about h2 {
+  max-width: 620px;
+}
+
+
+/* ---------- 8. FOOTER ---------- */
+.site-footer {
+  background: var(--green-dark);
+  color: #e9e4d3;
+}
+
+.footer-inner {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer-brand {
+  color: #fff;
+  font-size: 1rem;
+}
+
+.footer-brand .brand-mark {
+  width: 30px;
+  height: 30px;
+  background: var(--card);
+  color: var(--green-dark);
+}
+
+.footer-inner p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+
+/* ---------- 9. SMALL SCREENS ----------
+   Rules inside @media only apply when the screen is narrow (phones). */
+@media (max-width: 860px) {
+  .tool-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .section-wrap,
+  .header-inner {
+    width: min(var(--content-width), calc(100% - 36px));
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding-top: 44px;
+    padding-bottom: 52px;
+  }
+
+  .season-card {
+    max-width: 460px;
+  }
+
+  .topic-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .topic-card {
+    min-height: 0;
+  }
+
+  .approach-inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  /* Show the Menu button and hide the links until it is pressed */
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--card);
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.9rem;
+  }
+
+  .site-navigation {
+    position: absolute;
+    z-index: 5;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 6px 18px 10px;
+    border-bottom: 1px solid var(--line);
+    background: var(--card);
+  }
+
+  .site-navigation.is-open {
+    display: flex;
+  }
+
+  .site-navigation a {
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .site-navigation a:first-child {
+    border-top: 0;
+  }
+
+  .panel,
+  .tool-card {
+    padding: 18px;
+  }
+
+  .fc-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fc-actions .field {
+    width: 100%;
+  }
+
+  .fc-or {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-bar {
+    flex-wrap: wrap;
+  }
+
+  .search-input {
+    flex-basis: 100%;
+  }
+
+  .footer-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+}
+
+
+/* ---------- 6b. PROFIT RESULTS (inside the "Your crop" card) ---------- */
+.result-box {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+}
+
+.result-box h4 {
+  margin: 0 0 10px;
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+}
+
+/* The big "chance of profit" line. Colour AND words show the level. */
+.pr-chance {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 6px 12px;
+  border: 2px solid currentColor;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.result-box .pr-good  { color: var(--green); background: var(--green-pale); }
+.result-box .pr-mixed { color: var(--ochre); background: #f4e8c9; }
+.result-box .pr-poor  { color: var(--clay);  background: #f6e3da; }
+
+.pr-table {
+  width: 100%;
+  margin: 8px 0;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.pr-table th,
+.pr-table td {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.pr-table td {
+  text-align: right;
+  font-weight: 600;
+}
+
+.pr-list {
+  margin: 0 0 10px;
+  padding-left: 20px;
+}
+
+.pr-list li {
+  margin-bottom: 8px;
+}
+
+.pr-note {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* ==================================================================
+   10. MULTI-PAGE LAYOUT (menu highlight, page headings, feature cards)
+   ================================================================== */
+
+/* The menu link of the page you are on */
+.site-navigation a[aria-current="page"] {
+  color: var(--green);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+/* With 6 menu links, bring them a little closer on wide screens */
+@media (min-width: 721px) {
+  .site-navigation {
+    gap: 22px;
+  }
+}
+
+/* The heading area at the top of every feature page */
+.page-hero {
+  padding-top: 44px;
+  padding-bottom: 8px;
+}
+
+.page-hero h1 {
+  margin-bottom: 12px;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: var(--green);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.page-body {
+  padding-bottom: 72px;
+}
+
+.step-title {
+  margin: 28px 0 0;
+  font-family: Georgia, serif;
+  font-size: 1.25rem;
+}
+
+.step-title + .panel {
+  margin-top: 12px;
+}
+
+/* "Your location" box on the Crops and Buyers pages */
+.loc-current {
+  margin: 0 0 12px;
+  font-weight: 600;
+}
+
+/* A note that a feature is not finished yet */
+.soon-note {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border-left: 4px solid var(--ochre);
+  border-radius: 4px;
+  background: #f4e8c9;
+  font-size: 0.92rem;
+}
+
+/* The "Next step" link at the bottom of each page */
+.next-step {
+  margin: 24px 0 0;
+  color: var(--muted);
+}
+
+.next-step a {
+  color: var(--green);
+  font-weight: 700;
+}
+
+/* The feature cards on the home page. Each card is a link to its own page. */
+.features {
+  padding-top: 56px;
+  padding-bottom: 64px;
+  border-top: 1px solid var(--line);
+}
+
+.features h2 {
+  margin-bottom: 10px;
+  font-size: clamp(1.6rem, 3.2vw, 2.3rem);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 28px;
+}
+
+.feature-card {
+  display: block;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 150ms ease, transform 150ms ease;
+}
+
+.feature-card:hover,
+.feature-card:focus-visible {
+  border-color: var(--green);
+  transform: translateY(-2px);
+}
+
+.feature-card h3 {
+  margin: 8px 0 6px;
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+}
+
+.feature-card p {
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 0.93rem;
+}
+
+.feature-open {
+  color: var(--green);
+  font-weight: 700;
+  font-size: 0.93rem;
+}
+
+@media (max-width: 860px) {
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==================================================================
+   11. THE 6-STEP JOURNEY (progress bar, Back/Next buttons, step cards)
+   ================================================================== */
+
+/* The heading area at the top of every step page */
+.page-hero {
+  padding-top: 24px;
+  padding-bottom: 8px;
+}
+
+.page-hero h1 {
+  margin-bottom: 12px;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+}
+
+.page-body {
+  padding-bottom: 72px;
+}
+
+/* Progress bar: "Step 3 of 6" and six boxes */
+.progress {
+  width: min(var(--content-width), calc(100% - 48px));
+  margin: 0 auto;
+  padding-top: 28px;
+}
+
+.progress-text {
+  margin: 0 0 10px;
+  color: var(--green);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.progress-list {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.progress-list li {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.progress-num {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  display: grid;
+  place-items: center;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* A finished step: solid green circle with a tick */
+.progress-list li.done {
+  color: var(--green);
+}
+
+.progress-list li.done .progress-num {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+/* The step you are on */
+.progress-list li.current {
+  border: 2px solid var(--green);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.progress-list li.current .progress-num {
+  background: var(--green-pale);
+  color: var(--green);
+}
+
+/* Back and Next buttons at the bottom of a step */
+.step-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.step-nav .btn {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* Home page: big Start button and the six step cards */
+.hero-actions {
+  margin: 22px 0 0;
+}
+
+.btn-large {
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.05rem;
+  text-decoration: none;
+}
+
+.features {
+  padding-top: 56px;
+  padding-bottom: 64px;
+  border-top: 1px solid var(--line);
+}
+
+.features h2 {
+  margin-bottom: 10px;
+  font-size: clamp(1.6rem, 3.2vw, 2.3rem);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 28px;
+}
+
+.feature-card {
+  display: block;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 150ms ease, transform 150ms ease;
+}
+
+.feature-card:hover,
+.feature-card:focus-visible {
+  border-color: var(--green);
+  transform: translateY(-2px);
+}
+
+.feature-card h3 {
+  margin: 8px 0 6px;
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+}
+
+.feature-card p {
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 0.93rem;
+}
+
+.feature-open {
+  color: var(--green);
+  font-weight: 700;
+  font-size: 0.93rem;
+}
+
+/* Small pieces used inside the steps */
+.summary-line {
+  margin: 0 0 12px;
+  font-weight: 700;
+}
+
+.fc-status a {
+  color: var(--green);
+  font-weight: 700;
+}
+
+.btn-small {
+  min-height: 34px;
+  padding: 0.25rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.soon-note {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border-left: 4px solid var(--ochre);
+  border-radius: 4px;
+  background: #f4e8c9;
+  font-size: 0.92rem;
+}
+
+/* Tablets and phones */
+@media (max-width: 860px) {
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .progress {
+    width: min(var(--content-width), calc(100% - 36px));
+  }
+
+  /* On phones only the current step shows its name */
+  .progress-label {
+    display: none;
+  }
+
+  .progress-list li {
+    justify-content: center;
+    padding: 6px;
+  }
+
+  .progress-list li.current {
+    flex: 3;
+  }
+
+  .progress-list li.current .progress-label {
+    display: inline;
+  }
+}
+
+@media (max-width: 560px) {
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step-nav {
+    flex-direction: column-reverse;
+  }
+
+  .step-nav .btn {
+    justify-content: center;
+  }
+}

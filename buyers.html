@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Buyers | Fieldwatch</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Find Crop Buyers</h1>
+    <p>Explore ways to connect with markets and sell your crops.</p>
+
+    <label for="buyer-crop">Select your crop:</label>
+    <select id="buyer-crop">
+      <option value="Rice">Rice</option>
+      <option value="Groundnut">Groundnut</option>
+      <option value="Millets">Millets</option>
+      <option value="Maize">Maize</option>
+      <option value="Cotton">Cotton</option>
+      <option value="Sugarcane">Sugarcane</option>
+      <option value="Pulses">Pulses</option>
+    </select>
+
+    <button id="find-buyers">Find Selling Options</button>
+
+    <section id="buyer-results" aria-live="polite"></section>
+
+    <p>
+      <strong>Safety:</strong> Verify the buyer, price, weighing process
+      and payment terms before selling. Never pay an unknown person
+      an advance fee.
+    </p>
+
+    <a href="prices.html">← Crop Prices</a>
+    <br><br>
+    <a href="payment.html">Continue to Payment Demo →</a>
+  </main>
+
+  <script src="layout.js"></script>
+  <script src="buyers.js"></script>
+</body>
+</html>

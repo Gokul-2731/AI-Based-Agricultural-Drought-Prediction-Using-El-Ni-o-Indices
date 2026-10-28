@@ -1,0 +1,12 @@
+{
+  "liveServer.settings.ignoreFiles": [
+    ".vscode/**",
+    "history/**",
+    "**/*.csv",
+    "**/*.py",
+    "**/*.joblib",
+    "**/*.png",
+    "**/*.scss",
+    "**/*.sass"
+  ]
+}

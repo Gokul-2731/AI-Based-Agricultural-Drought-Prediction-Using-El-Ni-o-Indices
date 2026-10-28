@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step 6: Secure payment — Fieldwatch</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="layout.js" defer></script>
+  </head>
+
+  <body>
+    <header class="site-header" id="site-header"></header>
+
+    <main>
+      <section class="page-hero section-wrap">
+        <p class="eyebrow">Step 6</p>
+        <h1>Secure payment</h1>
+        <p class="section-intro">
+          Pay or receive payment for a crop deal safely inside the app.
+          During testing no real money is used.
+        </p>
+      </section>
+
+      <section class="page-body section-wrap">
+        <div class="panel">
+          <label class="field-label" for="pay-amount">Amount (Rs)</label>
+          <input class="field" id="pay-amount" type="number" min="0" placeholder="For example 25000" />
+
+          <div class="button-row">
+            <!-- FEATURE BUTTON: payment gateway (to be connected later) -->
+            <button class="btn" id="pay-btn" type="button" data-feature="payment">Pay securely</button>
+          </div>
+
+          <div class="result-box" id="pay-result" hidden></div>
+          <p class="soon-note">This part is being built. The button will work soon.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+  </body>
+</html>

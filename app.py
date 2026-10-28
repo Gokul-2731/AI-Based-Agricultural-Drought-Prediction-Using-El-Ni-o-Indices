@@ -7,25 +7,22 @@
 # Run:   python app.py
 # Test:  open http://127.0.0.1:5000/api/forecast?lat=9.92&lon=78.12   (Madurai)
 #
-# Every forecast is saved in the MySQL table "forecasts" (needs db_config.py).
-# NEW in this version: /api/profit and /api/suggest use profit.py (must be in the same folder).
+# Every forecast is saved in a CSV file: history/forecast_history.csv (no database needed).
+# /api/profit and /api/suggest use profit.py (must be in the same folder).
 
+import csv
 import math
-from datetime import date, timedelta
+import os
+import threading
+from datetime import date, datetime, timedelta
 
 import joblib
 import numpy as np
 import pandas as pd
 import requests
-import mysql.connector
 from flask import Flask, jsonify, request
 
 import profit                             # our crop and profit calculations
-
-try:
-    import db_config                      # your MySQL settings
-except ImportError:
-    db_config = None                      # the app still works, it just won't save
 
 app = Flask(__name__)
 
@@ -118,36 +115,32 @@ def latest_oni(year, month):
     return float(oni_table.dropna().iloc[-1]["oni"])     # fall back to latest we have
 
 
-# ---------- Database helpers ----------
-def connect_db():
-    """Open a connection to MySQL. connection_timeout stops the app waiting forever."""
-    return mysql.connector.connect(
-        host=db_config.HOST, user=db_config.USER, password=db_config.PASSWORD,
-        database=db_config.DATABASE, connection_timeout=3)
+# ---------- Saving forecasts in a CSV file (instead of a database) ----------
+HISTORY_FOLDER = "history"
+HISTORY_FILE = os.path.join(HISTORY_FOLDER, "forecast_history.csv")
+HISTORY_COLUMNS = ["made_at", "district", "based_on_month", "forecast_months",
+                   "predicted_rain_mm", "normal_rain_mm", "percent_of_normal",
+                   "risk_label", "el_nino_index"]
+file_lock = threading.Lock()      # stops two requests writing to the file at the same moment
 
 
 def save_forecast(district, based_on, months, predicted, normal, percent, risk, oni):
-    """Save one forecast row. Returns True if saved, False if anything went wrong.
-    A database problem must never stop the farmer from seeing the forecast."""
-    if db_config is None:
-        return False
+    """Add one line to the CSV file. Returns True if saved, False if anything went wrong.
+    A saving problem must never stop the farmer from seeing the forecast."""
     try:
-        db = connect_db()
-        cursor = db.cursor()
-        cursor.execute("SELECT district_id FROM districts WHERE name = %s", (district,))
-        found = cursor.fetchone()
-        if found is None:
-            db.close()
-            return False
-        cursor.execute(
-            "INSERT INTO forecasts (district_id, based_on_month, forecast_months, "
-            "predicted_rain_mm, normal_rain_mm, percent_of_normal, risk_label, oni_used) "
-            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-            (found[0], based_on, ",".join(months), predicted, normal, percent, risk, oni))
-        db.commit()
-        db.close()
+        with file_lock:
+            os.makedirs(HISTORY_FOLDER, exist_ok=True)
+            is_new_file = not os.path.exists(HISTORY_FILE)
+            with open(HISTORY_FILE, "a", newline="", encoding="utf-8") as f:
+                writer = csv.writer(f)
+                if is_new_file:
+                    writer.writerow(HISTORY_COLUMNS)          # first line = column names
+                writer.writerow([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), district,
+                                 based_on, ",".join(months), predicted, normal, percent,
+                                 risk, oni])
         return True
     except Exception as error:
+        # Most common reason: the CSV file is open in Excel. Close it and try again.
         print("Could not save forecast:", error)
         return False
 
@@ -207,7 +200,7 @@ def build_forecast(lat, lon):
     risk = risk_label(percent) if percent is not None else "Not enough history"
     based_on_text = f"{MONTH_NAMES[month - 1]} {year}"
 
-    # Save this forecast in MySQL (True or False is shown in the answer)
+    # Save this forecast in the CSV file (True or False is shown in the answer)
     was_saved = save_forecast(district, based_on_text, next_months, round(predicted),
                               round(normal), percent, risk, round(row["oni"], 2))
 
@@ -218,7 +211,7 @@ def build_forecast(lat, lon):
         normal_rain_mm=round(normal),
         percent_of_normal=percent,
         risk=risk,
-        saved_to_database=was_saved,
+        saved_to_file=was_saved,
         based_on={"latest_complete_month": based_on_text,
                   "el_nino_index": round(row["oni"], 2)},
         note="Forecast for the TOTAL rain of these 3 months. It is an estimate, not a guarantee.",
@@ -296,23 +289,15 @@ def suggest_crops():
 @app.route("/api/history")
 def history():
     """Show the last 10 saved forecasts, so you can check that saving works."""
-    if db_config is None:
-        return jsonify(error="db_config.py not found"), 503
+    if not os.path.exists(HISTORY_FILE):
+        return jsonify([])                       # nothing saved yet
     try:
-        db = connect_db()
-        cursor = db.cursor(dictionary=True)
-        cursor.execute(
-            "SELECT f.forecast_id, d.name AS district, f.made_at, f.forecast_months, "
-            "f.predicted_rain_mm, f.normal_rain_mm, f.percent_of_normal, f.risk_label "
-            "FROM forecasts f JOIN districts d ON d.district_id = f.district_id "
-            "ORDER BY f.forecast_id DESC LIMIT 10")
-        rows = cursor.fetchall()
-        db.close()
-        for r in rows:
-            r["made_at"] = str(r["made_at"])
-        return jsonify(rows)
+        with file_lock:
+            with open(HISTORY_FILE, newline="", encoding="utf-8") as f:
+                rows = list(csv.DictReader(f))
+        return jsonify(rows[-10:][::-1])         # newest first
     except Exception as error:
-        return jsonify(error="Could not read the database", details=str(error)), 503
+        return jsonify(error="Could not read the history file", details=str(error)), 503
 
 
 @app.route("/")

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step 1: Forecast — Fieldwatch</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="layout.js" defer></script>
+    <script src="forecast.js" defer></script>
+  </head>
+
+  <body>
+    <header class="site-header" id="site-header"></header>
+
+    <main>
+      <section class="page-hero section-wrap">
+        <p class="eyebrow">Step 1</p>
+        <h1>Check the rainfall forecast</h1>
+        <p class="section-intro">
+          Share your location, or pick a district, to see the expected rainfall
+          and drought risk for the next 3 months.
+        </p>
+      </section>
+
+      <section class="page-body section-wrap">
+        <!-- IMPORTANT: do not rename the ids that start with "fc-", forecast.js looks for them -->
+        <div class="panel">
+          <div class="fc-actions">
+            <!-- FEATURE BUTTON: GPS location (working) -->
+            <button class="btn" id="fc-gps" type="button">Use my location</button>
+            <span class="fc-or">or</span>
+            <label for="fc-district" class="visually-hidden-label">District</label>
+            <select class="field" id="fc-district">
+              <option>Chennai</option>
+              <option selected>Madurai</option>
+              <option>Thanjavur</option>
+              <option>Coimbatore</option>
+              <option>Ramanathapuram</option>
+            </select>
+            <button class="btn btn-outline" id="fc-district-go" type="button">Show forecast</button>
+          </div>
+
+          <p class="fc-status" id="fc-status" role="status" aria-live="polite" hidden></p>
+
+          <div class="fc-result" id="fc-result" hidden>
+            <p class="fc-place" id="fc-place"></p>
+            <p class="fc-months" id="fc-months"></p>
+
+            <div class="fc-bar-row">
+              <div class="fc-bar-label"><span>Expected rain</span><strong id="fc-pred-value"></strong></div>
+              <div class="fc-bar-track"><div class="fc-bar fc-bar-pred" id="fc-pred-bar"></div></div>
+            </div>
+            <div class="fc-bar-row">
+              <div class="fc-bar-label"><span>Normal rain</span><strong id="fc-norm-value"></strong></div>
+              <div class="fc-bar-track"><div class="fc-bar fc-bar-norm" id="fc-norm-bar"></div></div>
+            </div>
+
+            <p class="fc-percent" id="fc-percent"></p>
+            <p class="fc-risk" id="fc-risk"></p>
+            <p class="fc-basis" id="fc-basis"></p>
+            <p class="fc-note" id="fc-note"></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="site-footer"></footer>
+  </body>
+</html>

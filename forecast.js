@@ -1,9 +1,9 @@
-// forecast.js - talks to your Flask backend (app.py) and shows the 3-month forecast.
+// forecast.js - Step 1: talks to your Flask backend (app.py) and shows the 3-month forecast.
 // Make sure `python app.py` is running before you click the buttons.
 
 const API_BASE = "http://127.0.0.1:5000";
 
-// Centre points of the 5 starter districts (same as app.py), used if GPS is not available
+// Centre points of the 5 starter districts (same as app.py)
 const DISTRICT_POINTS = {
   Chennai: [13.08, 80.27],
   Madurai: [9.92, 78.12],
@@ -29,8 +29,11 @@ function setBusy(busy) {
   districtButton.disabled = busy;
 }
 
-async function loadForecast(lat, lon) {
-  window.lastLocation = { lat: lat, lon: lon };   // profit.js uses this
+async function loadForecast(lat, lon, label) {
+  // Remember this location, so the next steps can use it too
+  try {
+    localStorage.setItem("fieldwatch_location", JSON.stringify({ lat: lat, lon: lon, label: label }));
+  } catch (error) {}
   resultBox.hidden = true;
   setBusy(true);
   setStatus("Getting the latest satellite weather data and running the forecast. This can take up to 20 seconds...");
@@ -98,7 +101,9 @@ gpsButton.addEventListener("click", () => {
   setBusy(true);
   navigator.geolocation.getCurrentPosition(
     (position) => {
-      loadForecast(position.coords.latitude.toFixed(4), position.coords.longitude.toFixed(4));
+      const lat = position.coords.latitude.toFixed(4);
+      const lon = position.coords.longitude.toFixed(4);
+      loadForecast(lat, lon, "GPS (" + lat + ", " + lon + ")");
     },
     () => {
       setBusy(false);
@@ -110,5 +115,5 @@ gpsButton.addEventListener("click", () => {
 
 districtButton.addEventListener("click", () => {
   const point = DISTRICT_POINTS[districtSelect.value];
-  loadForecast(point[0], point[1]);
+  loadForecast(point[0], point[1], districtSelect.value + " district");
 });
